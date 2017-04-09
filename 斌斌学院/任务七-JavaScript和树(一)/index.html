@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+		}
+		.floor {
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+			border: 1px solid black;
+			margin: 10vh auto;
+			background-color: white;
+			/*transition: 0.5s;*/
+			/*transition-delay: 0.5s;*/
+		}
+		.floor.active {
+			background-color: blue;
+		}
+		.first_floor {
+			width: 80vw;
+			height: 60vh;
+		}
+		.second_floor {
+			width: 35vw;
+			height: 50vh;
+		}
+		.third_floor {
+			width: 16vw;
+			height: 40vh;
+		}
+		.forth_floor {
+			width: 6vw;
+			height: 30vh;
+		}
+
+		.btn_group {
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+			width: 80vw;
+			height: 10vh;
+			border: 1px solid black;
+			margin: 0 auto;
+		}
+	</style>
+</head>
+<body>
+	<div class="first_floor floor">
+		<div class="second_floor floor">
+			<div class="floor third_floor">
+				<div class="floor forth_floor"></div>
+				<div class="floor forth_floor"></div>
+			</div>
+			<div class="floor third_floor">
+				<div class="floor forth_floor"></div>
+				<div class="floor forth_floor"></div>
+			</div>
+		</div>
+		<div class="second_floor floor">
+			<div class="floor third_floor">
+				<div class="floor forth_floor"></div>
+				<div class="floor forth_floor"></div>
+			</div>
+			<div class="floor third_floor">
+				<div class="floor forth_floor"></div>
+				<div class="floor forth_floor"></div>
+			</div>
+		</div>
+	</div>
+	<div class="btn_group">
+		<button class="btn">先序</button>
+		<button class="btn">中序</button>
+		<button class="btn">后序</button>
+	</div>
+	<script>
+		window.onload = function () {
+			let arr = [],
+				timer = null;
+
+			var btns = document.getElementsByClassName('btn');
+			var first_floor = document.getElementsByClassName('first_floor')[0];
+
+
+			//此方法用于把遍历得到的节点逐个放到数组中去
+			function pushNodeIntoArray(node) {
+				arr.push(node);
+			}
+			//用于把数组中每个节点逐个进行特殊显示的效果，为了做数组中前一个元素完成特殊展现后回原状态后
+			//然后数组中下一个元素继续进行特殊展现直至最后一个的这样一个效果
+			var setAnimations = function(index) {
+				timer = setInterval( function() {
+					var len = arr.length;
+					if (index === arr.length) {
+						arr[index-1].classList.remove('active');
+						return;
+					}
+					if (index === 0) {
+						arr[index].classList.add('active');
+						
+					} else {
+						arr[index-1].classList.remove('active');
+						arr[index].classList.add('active');
+					}
+					++index;		
+				}, 500);
+			};
+			//先序遍历所有节点，callback是要对遍历到的每个节点可进行一些操作的函数
+			function preOrderTraverse(node, callback) {				
+				if (node) {
+					var directSubNodes = node.children;
+					callback && callback(node);
+					if (directSubNodes.length === 2) {
+						preOrderTraverse(directSubNodes[0], callback);
+						preOrderTraverse(directSubNodes[1], callback);
+					}					
+				}
+			}
+			//后序遍历所有节点，callback是要对遍历到的每个节点可进行一些操作的函数
+			function postOrderTraverse(node, callback) {				
+				if (node) {
+					var directSubNodes = node.children;
+					
+					if (directSubNodes.length === 2) {
+						postOrderTraverse(directSubNodes[0], callback);
+						postOrderTraverse(directSubNodes[1], callback);
+					}
+					callback && callback(node);
+					console.log(node);					
+				}
+			}
+			//中序遍历所有节点，callback是要对遍历到的每个节点可进行一些操作的函数
+			function inOrderTraverse(node, callback) {				
+				if (node) {
+					var directSubNodes = node.children;
+					
+					if (directSubNodes.length === 2) {
+						inOrderTraverse(directSubNodes[0], callback);
+					}
+					callback && callback(node);
+					if (directSubNodes.length === 2) {
+						inOrderTraverse(directSubNodes[1], callback);
+					}					
+				}
+			}
+
+			
+
+			Array.prototype.forEach.call(btns, function(element, index) {
+				btns[index].addEventListener('click', function () {
+					clearInterval(timer);
+					arr = [];
+					Array.prototype.forEach.call(document.getElementsByClassName('active'), function (elem) {
+						elem.classList.remove('active');
+					});
+					switch(index) {
+						case 0:
+							preOrderTraverse(first_floor, pushNodeIntoArray);
+							break;
+						case 1:
+							inOrderTraverse(first_floor, pushNodeIntoArray);
+							break;
+							case 2:
+							inOrderTraverse(first_floor, pushNodeIntoArray);
+							break;
+					};
+					setAnimations(0);
+				});
+			});
+		}
+	</script>
+</body>
+</html>
