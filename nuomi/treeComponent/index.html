@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		body {margin: 0; padding: 0; font-family: "微软雅黑";}
+		.TreeFolderExplorer__rootNode {
+			border: 1px solid black;
+			margin: 5px;
+		}
+		/*告知用户当前列表是关闭还是打开的sign*/
+		.toggleChildListSign {
+			display: inline-block;
+			width: 10px;
+			content: "∨";
+			margin: 0 5px;
+		}
+		/*包括除根节点以及叶子节点以外所有后代节点*/
+		.TreeFolderExplorer__descendantNode {
+			margin: 10px 20px;
+		}
+
+		/*树中的叶子节点*/
+		.TreeFolderExplorer__leafNode {
+			margin: 10px 20px;
+		}
+	</style>
+</head>
+<body>
+	<div class="TreeFolderExplorer__rootNode">
+		<!-- Animals
+		<div class="TreeFolderExplorer__descendantNode">dot</div>
+		<div class="TreeFolderExplorer__leafNode">cot</div>
+		<div class="TreeFolderExplorer__leafNode">not</div> -->
+	</div>
+	<script src="./TreeFolderExplorer.js"></script>
+	<script>
+		//组件使用举例
+		var data = [
+			{
+				name: "父节点1", 
+				children: [ {name: "子节点1"}, {name: "子节点2"} ]
+			}, 
+		 	{
+		 		name: "父节点2", 
+		 		children: [ 
+			 		{name: "子节点3"}, {name: "子节点4", children:[ {name:"子节点5"} ]} 
+		 		]
+		 	} 
+		];
+
+		new TreeFolderExplorer({
+			data: data,
+			rootName: '根节点'
+		})
+	</script>
+</body>
+</html>
