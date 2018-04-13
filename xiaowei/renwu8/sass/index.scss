@@ -1,0 +1,49 @@
+div {
+    box-sizing: border-box;
+}
+
+.row {
+    display: block;
+}
+
+/*清浮动*/
+.row::after {
+    display: block;
+    content: "";
+    height: 0;
+    clear: both;
+}
+
+*[class^="col-"] {
+    float: left;
+}
+
+$size_list: (
+    xs:  0,
+    sm: 576,
+    md: 992,
+    lg: 1200
+);
+
+//为col数从1到12的网格分别设置适当的宽度，并且响应式布局为四种size
+@each $key, $value in $size_list {
+
+    @for $i from 1 through 12 {
+
+        @media (min-width: #{$value}px) {
+            .col-#{$key}-#{$i} {
+                width: 100% * ($i / 12);
+            }
+
+            .col-#{$key}-offset-#{$i} {
+                margin-left: 100% * ($i / 12);
+            }
+        }
+    }
+}
+
+
+//对比了boostrap的源代码中关于网格系统的实现，他把各个特殊的col类的样式
+//进行了分散处理，先分离出一个专门用于处理的各个col类共有的一个公共样式的mixin，
+// 然后再定义一个mixin用于综合处理各个特殊的col类的特殊样式，这个miixn里又
+// 进行了分散处理，分为float col的一个mixin和计算col宽度的一个mixin
